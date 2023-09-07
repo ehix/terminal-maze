@@ -78,8 +78,8 @@ func main() {
 
 	for playAgain {
 		maze := amaze.NewMaze()
-		maze.Generate()
 		maze.SetStartExit()
+		maze.Generate()
 
 		// Initialize the keyboard
 		err := keyboard.Open()

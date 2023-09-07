@@ -19,9 +19,9 @@ func (m *Maze) AutoSolve() {
 	// Find the start and exit positions
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
-			if m.grid[i][j] == start {
+			if m.grid[i][j] == tiles.start {
 				startNode = &Node{row: i, col: j}
-			} else if m.grid[i][j] == exit {
+			} else if m.grid[i][j] == tiles.exit {
 				exitNode = &Node{row: i, col: j}
 			}
 		}
@@ -76,7 +76,6 @@ func (m *Maze) AutoSolve() {
 					m.MovePlayer('a')
 				}
 				current = next
-				m.Print()
 				time.Sleep(80 * time.Millisecond) // Adjust the speed of auto-solve
 			}
 			break
@@ -87,7 +86,7 @@ func (m *Maze) AutoSolve() {
 		for _, dir := range directions {
 			row, col := current.row+dir[0], current.col+dir[1]
 			// Check if the neighbor is a valid cell and not in the closed set
-			if row >= 0 && row < rows && col >= 0 && col < cols && m.grid[row][col] != wall && closedSet[row][col] != true {
+			if row >= 0 && row < rows && col >= 0 && col < cols && m.grid[row][col] != tiles.wall && closedSet[row][col] != true {
 				// Create a neighbor node
 				neighbor := &Node{row: row, col: col, parent: current}
 
