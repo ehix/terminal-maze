@@ -8,9 +8,6 @@ import (
 // Maze dimensions
 const rows, cols = 11, 11
 
-// Cell dimensions (including spaces)
-const cellWidth = 2
-
 var tiles TileSet
 
 type Maze struct {
@@ -53,9 +50,6 @@ func (m *Maze) SetStartExit() {
 	m.col = startCol
 	m.start = []int{0, startCol}
 	m.end = []int{rows - 1, exitCol}
-
-	// m.grid[0][1] = start
-	// m.grid[rows-1][cols-2] = exit // need random grid[0][1-6] for start, and random grid[1-6][cols-2] for end.
 }
 
 // IsGameOver checks if the game is over
@@ -70,7 +64,7 @@ func (m *Maze) Generate() {
 
 	// var endReached = false
 	// Changes m.grid in place, by removing walls and replacing with spaces.
-	stack := []struct{ row, col int }{{1, m.start[1]}} // <?> could just find the start here, meaning we could remove m.start?
+	stack := []struct{ row, col int }{{1, m.col}} // <?> could just find the start here, meaning we could remove m.start?
 	for len(stack) > 0 {
 		current := stack[len(stack)-1]
 		row, col := current.row, current.col
