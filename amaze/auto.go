@@ -11,22 +11,27 @@ type Node struct {
 	parent   *Node
 }
 
+func (m *Maze) findStartEndNode() (*Node, *Node) {
+	var startNode *Node
+	var exitNode *Node
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			if m.grid[i][j] == tiles.start {
+				startNode = &Node{row: i, col: j}
+			} else if m.grid[i][j] == tiles.exit {
+				exitNode = &Node{row: i, col: j}
+			}
+		}
+	}
+	return startNode, exitNode
+}
+
 // AutoSolve finds a path to the exit using the A* algorithm
 func (m *Maze) AutoSolve() {
 	var startNode *Node
 	var exitNode *Node
 	startNode = &Node{row: m.start[0], col: m.start[1]}
 	exitNode = &Node{row: m.end[0], col: m.end[1]}
-	// // Find the start and exit positions
-	// for i := 0; i < rows; i++ {
-	// 	for j := 0; j < cols; j++ {
-	// 		if m.grid[i][j] == tiles.start {
-	// 			startNode = &Node{row: i, col: j}
-	// 		} else if m.grid[i][j] == tiles.exit {
-	// 			exitNode = &Node{row: i, col: j}
-	// 		}
-	// 	}
-	// }
 
 	if startNode == nil || exitNode == nil {
 		fmt.Println("Error: Start or exit not found.")
