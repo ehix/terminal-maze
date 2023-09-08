@@ -15,13 +15,6 @@ import (
 // https://pkg.go.dev/github.com/eiannone/keyboard@v0.0.0-20220611211555-0d226195f203
 // https://pkg.go.dev/golang.org/x/crypto/ssh/terminal
 
-// Auto can always be solved with extra walls, manual cant?
-// Lets:
-// 1. tidy up the current implementation.
-// 2. have games run continuously until exit rather than wait for user input.
-// 3. add trails if you can
-// 4. change the begininning and end position flag and door.
-
 // Function to display a simple text animation
 func animateText() {
 	// screenWidth, screenHeight, err := term.GetSize(0)
@@ -68,16 +61,6 @@ func main() {
 	}
 
 	playAgain := true
-
-	// // Handle Ctrl+C to exit gracefully
-	// c := make(chan os.Signal, 1)
-	// signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-	// go func() {
-	// 	<-c
-	// 	fmt.Println("yeah")
-	// 	playAgain = false
-	// }()
-
 	for playAgain {
 		maze := amaze.NewMaze()
 		maze.SetStartExit()
@@ -94,7 +77,7 @@ func main() {
 			// Wait for a signal from a channel, otherwise run autosolve.
 			// Running this in a go routine breaks it.
 			maze.AutoSolve()
-			// break
+			break
 		} else {
 			for !maze.IsGameOver() {
 				maze.Print()
@@ -109,7 +92,7 @@ func main() {
 					break
 				}
 
-				if key == keyboard.KeyEsc || key == keyboard.KeyCtrlC {
+				if key == keyboard.KeyEsc { //|| key == keyboard.KeyCtrlC {
 					// Terminate and close keyboard
 					amaze.ClearScreen()
 					playAgain = false
@@ -120,15 +103,6 @@ func main() {
 					maze.MovePlayer(char)
 				}
 			}
-
-			// if playAgain {
-			// 	fmt.Println("Congratulations! You've reached the exit (🚪).")
-			// 	// Ask the player if they want to play another maze
-			// 	fmt.Print("Do you want to play another maze? (y/n): ")
-			// 	var response string
-			// 	fmt.Scan(&response)
-			// 	playAgain = strings.ToLower(response) == "y"
-			// }
 		}
 	}
 }
