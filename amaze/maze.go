@@ -6,7 +6,7 @@ import (
 )
 
 // Maze dimensions
-const rows, cols = 23, 23
+const rows, cols = 11, 11
 
 var tiles TileSet
 
@@ -22,6 +22,10 @@ type Maze struct {
 // NewMaze creates a new maze
 func NewMaze() *Maze {
 	tiles = SetRandomTiles()
+	// for _, k := range tileSets {
+	// 	fmt.Println(k)
+	// }
+	// tiles = tileSets["toothfairy"]
 	m := &Maze{
 		grid: make([][]string, rows),
 		row:  0,
@@ -171,7 +175,6 @@ func (m *Maze) Print() {
 			}
 		}
 		fmt.Println(rowStr)
-		// break
 	}
 }
 
