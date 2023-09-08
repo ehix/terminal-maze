@@ -6,7 +6,7 @@ import (
 )
 
 // Maze dimensions
-const rows, cols = 11, 11
+const rows, cols = 23, 23
 
 var tiles TileSet
 
@@ -92,9 +92,11 @@ func (m *Maze) Generate() {
 			stack = stack[:len(stack)-1] // remove from the stack
 		}
 	}
-	// Add more empty cells with a certain probability
-	if rand.Float64() < 0.7 { // make this scale with every game?
-		m.addRandomEmpty()
+	for i := 0; i < 3; i++ {
+		// Add more empty cells with a certain probability
+		if rand.Float64() < 0.9 { // make this scale with every game?
+			m.addRandomEmpty()
+		}
 	}
 }
 

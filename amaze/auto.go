@@ -15,17 +15,18 @@ type Node struct {
 func (m *Maze) AutoSolve() {
 	var startNode *Node
 	var exitNode *Node
-
-	// Find the start and exit positions
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
-			if m.grid[i][j] == tiles.start {
-				startNode = &Node{row: i, col: j}
-			} else if m.grid[i][j] == tiles.exit {
-				exitNode = &Node{row: i, col: j}
-			}
-		}
-	}
+	startNode = &Node{row: m.start[0], col: m.start[1]}
+	exitNode = &Node{row: m.end[0], col: m.end[1]}
+	// // Find the start and exit positions
+	// for i := 0; i < rows; i++ {
+	// 	for j := 0; j < cols; j++ {
+	// 		if m.grid[i][j] == tiles.start {
+	// 			startNode = &Node{row: i, col: j}
+	// 		} else if m.grid[i][j] == tiles.exit {
+	// 			exitNode = &Node{row: i, col: j}
+	// 		}
+	// 	}
+	// }
 
 	if startNode == nil || exitNode == nil {
 		fmt.Println("Error: Start or exit not found.")
@@ -76,6 +77,7 @@ func (m *Maze) AutoSolve() {
 					m.MovePlayer('a')
 				}
 				current = next
+				m.Print()
 				time.Sleep(80 * time.Millisecond) // Adjust the speed of auto-solve
 			}
 			break

@@ -10,7 +10,6 @@ import (
 
 	"github.com/ehix/terminalmaze/amaze"
 	"github.com/eiannone/keyboard"
-	"golang.org/x/term"
 )
 
 // https://pkg.go.dev/github.com/eiannone/keyboard@v0.0.0-20220611211555-0d226195f203
@@ -25,19 +24,21 @@ import (
 
 // Function to display a simple text animation
 func animateText() {
-	screenWidth, screenHeight, err := term.GetSize(0)
-	if err != nil {
-		fmt.Println("Error here.")
-	}
-	text := `
-	Solve
-	the
-	maze`
+	// screenWidth, screenHeight, err := term.GetSize(0)
+	// if err != nil {
+	// 	fmt.Println("Error here.")
+	// }
+	// text := `
+	// Solve
+	// the
+	// maze`
 
-	textLines := strings.Split(text, "\n")
+	textLines := strings.Split(banner, "\n")
 	numLines := len(textLines)
-	originX := screenWidth/2 - len(textLines[0])/2
-	originY := screenHeight/2 - numLines/2
+	// originX := screenWidth/2 - len(textLines[0])/2
+	// originY := screenHeight/2 - numLines/2
+	originX := 0
+	originY := 0
 
 	for i := 0; i < numLines; i++ {
 		amaze.ClearScreen()
@@ -51,14 +52,15 @@ func animateText() {
 					fmt.Printf("%s\n", strings.Repeat(" ", originX)+line)
 				}
 			}
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(10 * time.Millisecond)
 		}
 	}
+	time.Sleep(10 * time.Millisecond)
 }
 
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
-	animateText()
+	// animateText()
 
 	autoSolve := false
 	if len(os.Args) > 1 && os.Args[1] == "auto" {
@@ -92,7 +94,7 @@ func main() {
 			// Wait for a signal from a channel, otherwise run autosolve.
 			// Running this in a go routine breaks it.
 			maze.AutoSolve()
-			break
+			// break
 		} else {
 			for !maze.IsGameOver() {
 				maze.Print()
@@ -130,3 +132,34 @@ func main() {
 		}
 	}
 }
+
+//https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
+// var banner = `
+// ▄▄▄█████▓▓█████  ██▀███   ███▄ ▄███▓ ██▓ ███▄    █  ▄▄▄       ██▓        ███▄ ▄███▓ ▄▄▄      ▒███████▒▓█████     ██▓
+// ▓  ██▒ ▓▒▓█   ▀ ▓██ ▒ ██▒▓██▒▀█▀ ██▒▓██▒ ██ ▀█   █ ▒████▄    ▓██▒       ▓██▒▀█▀ ██▒▒████▄    ▒ ▒ ▒ ▄▀░▓█   ▀    ▓██▒
+// ▒ ▓██░ ▒░▒███   ▓██ ░▄█ ▒▓██    ▓██░▒██▒▓██  ▀█ ██▒▒██  ▀█▄  ▒██░       ▓██    ▓██░▒██  ▀█▄  ░ ▒ ▄▀▒░ ▒███      ▒██▒
+// ░ ▓██▓ ░ ▒▓█  ▄ ▒██▀▀█▄  ▒██    ▒██ ░██░▓██▒  ▐▌██▒░██▄▄▄▄██ ▒██░       ▒██    ▒██ ░██▄▄▄▄██   ▄▀▒   ░▒▓█  ▄    ░██░
+//   ▒██▒ ░ ░▒████▒░██▓ ▒██▒▒██▒   ░██▒░██░▒██░   ▓██░ ▓█   ▓██▒░██████▒   ▒██▒   ░██▒ ▓█   ▓██▒▒███████▒░▒████▒   ░██░
+//   ▒ ░░   ░░ ▒░ ░░ ▒▓ ░▒▓░░ ▒░   ░  ░░▓  ░ ▒░   ▒ ▒  ▒▒   ▓▒█░░ ▒░▓  ░   ░ ▒░   ░  ░ ▒▒   ▓▒█░░▒▒ ▓░▒░▒░░ ▒░ ░   ░▓
+//     ░     ░ ░  ░  ░▒ ░ ▒░░  ░      ░ ▒ ░░ ░░   ░ ▒░  ▒   ▒▒ ░░ ░ ▒  ░   ░  ░      ░  ▒   ▒▒ ░░░▒ ▒ ░ ▒ ░ ░  ░    ▒ ░
+//   ░         ░     ░░   ░ ░      ░    ▒ ░   ░   ░ ░   ░   ▒     ░ ░      ░      ░     ░   ▒   ░ ░ ░ ░ ░   ░       ▒ ░
+//             ░  ░   ░            ░    ░           ░       ░  ░    ░  ░          ░         ░  ░  ░ ░       ░  ░    ░
+//                                                                                              ░
+// `
+
+var banner = `
+▄▀▀▀█▀▀▄  ▄▀▀█▄▄▄▄  ▄▀▀▄▀▀▀▄  ▄▀▀▄ ▄▀▄  ▄▀▀█▀▄    ▄▀▀▄ ▀▄  ▄▀▀█▄   ▄▀▀▀▀▄     
+█    █  ▐ ▐  ▄▀   ▐ █   █   █ █  █ ▀  █ █   █  █  █  █ █ █ ▐ ▄▀ ▀▄ █    █     
+▐   █       █▄▄▄▄▄  ▐  █▀▀█▀  ▐  █    █ ▐   █  ▐  ▐  █  ▀█   █▄▄▄█ ▐    █     
+   █        █    ▌   ▄▀    █    █    █      █       █   █   ▄▀   █     █      
+ ▄▀        ▄▀▄▄▄▄   █     █   ▄▀   ▄▀    ▄▀▀▀▀▀▄  ▄▀   █   █   ▄▀    ▄▀▄▄▄▄▄▄▀
+█          █    ▐   ▐     ▐   █    █    █       █ █    ▐   ▐   ▐     █        
+▐          ▐                  ▐    ▐    ▐       ▐ ▐                  ▐        
+▄▀▀▄ ▄▀▄  ▄▀▀█▄   ▄▀▀▀▀▄   ▄▀▀█▄▄▄▄                                           
+█  █ ▀  █ ▐ ▄▀ ▀▄ █     ▄▀ ▐  ▄▀   ▐                                          
+▐  █    █   █▄▄▄█ ▐ ▄▄▀▀     █▄▄▄▄▄                                           
+  █    █   ▄▀   █   █        █    ▌                                           
+▄▀   ▄▀   █   ▄▀     ▀▄▄▄▄▀ ▄▀▄▄▄▄                                            
+█    █    ▐   ▐          ▐  █    ▐                                            
+▐    ▐                      ▐                                                 
+`
