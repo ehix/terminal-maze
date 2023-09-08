@@ -92,7 +92,7 @@ func main() {
 					break
 				}
 
-				if key == keyboard.KeyEsc { //|| key == keyboard.KeyCtrlC {
+				if key == keyboard.KeyEsc || key == keyboard.KeyCtrlC {
 					// Terminate and close keyboard
 					amaze.ClearScreen()
 					playAgain = false
