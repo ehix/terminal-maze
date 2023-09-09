@@ -66,10 +66,6 @@ func (m *Maze) IsGameOver() bool {
 
 // Generate generates the maze using Recursive Backtracking Algorithm
 func (m *Maze) Generate() {
-	// SetStartExit is called after this, that's why row 0 and (I'm assuming) col 7 aren't changed in the loop?
-	// Maybe set the start and exit before hand and then be able to use them here?
-
-	// var endReached = false
 	// Changes m.grid in place, by removing walls and replacing with spaces.
 	stack := []struct{ row, col int }{{1, m.col}} // <?> could just find the start here, meaning we could remove m.start?
 	for len(stack) > 0 {
@@ -99,12 +95,8 @@ func (m *Maze) Generate() {
 			stack = stack[:len(stack)-1] // remove from the stack
 		}
 	}
-	for i := 0; i < 3; i++ {
-		// Add more empty cells with a certain probability
-		if rand.Float64() < 0.7 { // make this scale with every game?
-			m.addRandomEmpty()
-		}
-	}
+	// Add more empty cells with a certain probability
+	m.addRandomEmpty(0.1)
 }
 
 func generateDirections(dist int) []struct{ row, col int } {
@@ -126,15 +118,6 @@ func getRandom(s []int) int {
 	return s[rand.Intn(len(s))]
 }
 
-// func getTwoRandom(s []int) (int, int) {
-// 	var coords []int
-// 	for i := 0; i < 2; i++ {
-// 		index := s[rand.Intn(len(s))]
-// 		coords = append(coords, index)
-// 	}
-// 	return coords[0], coords[1]
-// }
-
 func (m *Maze) addEmptyNextToPlayer() {
 	directions := generateDirections(1)
 	for _, d := range directions {
@@ -146,8 +129,22 @@ func (m *Maze) addEmptyNextToPlayer() {
 	}
 }
 
-// Adds a random cell
-func (m *Maze) addRandomEmpty() {
+func (m *Maze) addRandomEmpty(rate float64) {
+	for i, row := range m.grid {
+		if i != 0 && i != m.maxRows-1 {
+			for j, tile := range row {
+				if j != 0 && j != m.maxCols-1 {
+					if tile == tiles.wall && rand.Float64() < rate {
+						m.grid[i][j] = tiles.empty
+					}
+				}
+			}
+		}
+	}
+}
+
+func (m *Maze) addRandomEmptyOrig(n int) {
+	fmt.Println(m.grid)
 	row := getRandom(getOddSeries(1, m.maxRows-2))
 	col := getRandom(getOddSeries(1, m.maxCols-2))
 	if m.grid[row][col] == tiles.empty {
