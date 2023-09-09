@@ -15,6 +15,13 @@ import (
 // https://pkg.go.dev/github.com/eiannone/keyboard@v0.0.0-20220611211555-0d226195f203
 // https://pkg.go.dev/golang.org/x/crypto/ssh/terminal
 
+type session struct {
+	// Number of consecutive games played
+	played int
+	// Keep playing if true
+	cont bool
+}
+
 // Function to display a simple text animation
 func animateText() {
 	// screenWidth, screenHeight, err := term.GetSize(0)
@@ -54,15 +61,17 @@ func animateText() {
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 	// animateText()
-
 	autoSolve := false
 	if len(os.Args) > 1 && os.Args[1] == "auto" {
 		autoSolve = true
 	}
 
-	playAgain := true
-	for playAgain {
-		maze := amaze.NewMaze()
+	s := session{played: 0, cont: true}
+	d := amaze.NewDifficulty()
+	for s.cont {
+		d.SetCurrentStage(s.played)
+		row, col := d.GetDimensions()
+		maze := amaze.NewMaze(row, col)
 		maze.SetStartExit()
 		maze.Generate()
 
@@ -81,12 +90,23 @@ func main() {
 		} else {
 			for !maze.IsGameOver() {
 				maze.Print()
-
+				fmt.Printf("solved: %d\ndimensions: %dx%d", s.played, col, row)
 				// Read a single key press
 				char, key, err := keyboard.GetKey()
 				if err != nil {
 					log.Fatal(err)
 				}
+
+				if key == keyboard.KeyCtrlA {
+					// Auto solve the current maze
+					maze.AutoSolve()
+				}
+
+				if key == keyboard.KeyCtrlE {
+					// Remove random wall tiles from maze
+					maze.MakePath()
+				}
+
 				if key == keyboard.KeyCtrlR {
 					// Restart a new maze
 					break
@@ -94,8 +114,7 @@ func main() {
 
 				if key == keyboard.KeyEsc || key == keyboard.KeyCtrlC {
 					// Terminate and close keyboard
-					amaze.ClearScreen()
-					playAgain = false
+					s.cont = false
 					break
 				}
 
@@ -104,7 +123,9 @@ func main() {
 				}
 			}
 		}
+		s.played++
 	}
+	amaze.ClearScreen()
 }
 
 //https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20

@@ -14,8 +14,8 @@ type Node struct {
 func (m *Maze) findStartEndNode() (*Node, *Node) {
 	var startNode *Node
 	var exitNode *Node
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
+	for i := 0; i < m.maxRows; i++ {
+		for j := 0; j < m.maxCols; j++ {
 			if m.grid[i][j] == tiles.start {
 				startNode = &Node{row: i, col: j}
 			} else if m.grid[i][j] == tiles.exit {
@@ -30,7 +30,8 @@ func (m *Maze) findStartEndNode() (*Node, *Node) {
 func (m *Maze) AutoSolve() {
 	var startNode *Node
 	var exitNode *Node
-	startNode = &Node{row: m.start[0], col: m.start[1]}
+	// Start from wherever the player is currently
+	startNode = &Node{row: m.row, col: m.col}
 	exitNode = &Node{row: m.end[0], col: m.end[1]}
 
 	if startNode == nil || exitNode == nil {
@@ -89,11 +90,11 @@ func (m *Maze) AutoSolve() {
 		}
 
 		// Explore the neighbors of the current node
-		directions := [4][2]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+		directions := generateDirections(1)
 		for _, dir := range directions {
-			row, col := current.row+dir[0], current.col+dir[1]
+			row, col := current.row+dir.row, current.col+dir.col
 			// Check if the neighbor is a valid cell and not in the closed set
-			if row >= 0 && row < rows && col >= 0 && col < cols && m.grid[row][col] != tiles.wall && closedSet[row][col] != true {
+			if row >= 0 && row < m.maxRows && col >= 0 && col < m.maxCols && m.grid[row][col] != tiles.wall && closedSet[row][col] != true {
 				// Create a neighbor node
 				neighbor := &Node{row: row, col: col, parent: current}
 
