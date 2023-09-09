@@ -69,7 +69,8 @@ func (m *Maze) AutoSolve() {
 				current = current.parent
 				path = append([]*Node{current}, path...)
 			}
-
+			var spin int
+			spinner := spinners["clock"]
 			// Move the player along the path
 			for i := 1; i < len(path); i++ {
 				next := path[i]
@@ -84,7 +85,13 @@ func (m *Maze) AutoSolve() {
 				}
 				current = next
 				m.Print()
-				time.Sleep(80 * time.Millisecond) // Adjust the speed of auto-solve
+				if spin == len(spinner.frames)-1 {
+					spin = 0
+				}
+				fmt.Println(spinner.frames[spin])
+				spin++
+
+				time.Sleep(time.Duration(spinner.interval) * time.Millisecond) // Adjust the speed of auto-solve
 			}
 			break
 		}

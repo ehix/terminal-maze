@@ -6,6 +6,7 @@ import (
 )
 
 var tiles TileSet
+var Name string
 
 type Maze struct {
 	maxRows int
@@ -20,7 +21,7 @@ type Maze struct {
 
 // NewMaze creates a new maze
 func NewMaze(maxRows int, maxCols int) *Maze {
-	tiles = SetRandomTiles()
+	Name, tiles = SetRandomTiles()
 	// tiles = tileSets["frog"]
 	m := &Maze{
 		maxRows: maxRows,
@@ -118,14 +119,10 @@ func getRandom(s []int) int {
 	return s[rand.Intn(len(s))]
 }
 
-func (m *Maze) addEmptyNextToPlayer() {
-	directions := generateDirections(1)
-	for _, d := range directions {
-		nextRow, nextCol := m.row+d.row, m.col+d.col
-		if nextRow > 0 && nextRow < (m.maxRows-1) && nextCol > 0 && nextCol < (m.maxCols-1) && m.grid[nextRow][nextCol] == tiles.wall {
-			m.grid[nextRow][nextCol] = tiles.empty
-			break
-		}
+func (m *Maze) addEmptyInDirection(d struct{ row, col int }) {
+	nextRow, nextCol := m.row+d.row, m.col+d.col
+	if nextRow > 0 && nextRow < (m.maxRows-1) && nextCol > 0 && nextCol < (m.maxCols-1) && m.grid[nextRow][nextCol] == tiles.wall {
+		m.grid[nextRow][nextCol] = tiles.empty
 	}
 }
 
@@ -143,24 +140,23 @@ func (m *Maze) addRandomEmpty(rate float64) {
 	}
 }
 
-func (m *Maze) addRandomEmptyOrig(n int) {
-	fmt.Println(m.grid)
-	row := getRandom(getOddSeries(1, m.maxRows-2))
-	col := getRandom(getOddSeries(1, m.maxCols-2))
-	if m.grid[row][col] == tiles.empty {
-		directions := generateDirections(1)
-		for _, d := range directions { // this doesn't guarantee a cell is removed.
-			nextRow, nextCol := row+d.row, col+d.col
-			if nextRow > 0 && nextRow < (m.maxRows-1) && nextCol > 0 && nextCol < (m.maxCols-1) && m.grid[nextRow][nextCol] == tiles.wall {
-				m.grid[nextRow][nextCol] = tiles.empty
-				break
-			}
-		}
+func (m *Maze) MakePath(key rune) {
+	var d struct{ row, col int }
+	switch key {
+	case 'w':
+		d.row = -1
+	case 'a':
+		d.col = -1
+	case 's':
+		d.row = 1
+	case 'd':
+		d.col = 1
 	}
+	m.addEmptyInDirection(d)
 }
 
-func (m *Maze) MakePath() {
-	m.addEmptyNextToPlayer()
+func (m *Maze) MakeEasy() {
+	m.addRandomEmpty(0.5)
 }
 
 // MovePlayer moves the player in the specified direction

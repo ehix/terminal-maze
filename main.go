@@ -19,7 +19,8 @@ type session struct {
 	// Number of consecutive games played
 	played int
 	// Keep playing if true
-	cont bool
+	cont    bool
+	skipped bool
 }
 
 // Function to display a simple text animation
@@ -90,25 +91,45 @@ func main() {
 		} else {
 			for !maze.IsGameOver() {
 				maze.Print()
+				fmt.Println(amaze.Name)
 				fmt.Printf("solved: %d\ndimensions: %dx%d", s.played, col, row)
+				// fmt.Print("\033[H") // Move cursor to the top-left corner
+
 				// Read a single key press
 				char, key, err := keyboard.GetKey()
 				if err != nil {
 					log.Fatal(err)
 				}
 
-				if key == keyboard.KeyCtrlA {
+				if key == keyboard.KeyCtrlE {
 					// Auto solve the current maze
+					s.skipped = true
 					maze.AutoSolve()
 				}
 
-				if key == keyboard.KeyCtrlE {
-					// Remove random wall tiles from maze
-					maze.MakePath()
+				if key == keyboard.KeyCtrlQ {
+					maze.MakeEasy()
+				}
+
+				if key == keyboard.KeyCtrlW {
+					maze.MakePath('w')
+				}
+
+				if key == keyboard.KeyCtrlA {
+					maze.MakePath('a')
+				}
+
+				if key == keyboard.KeyCtrlS {
+					maze.MakePath('s')
+				}
+
+				if key == keyboard.KeyCtrlD {
+					maze.MakePath('d')
 				}
 
 				if key == keyboard.KeyCtrlR {
 					// Restart a new maze
+					s.skipped = true
 					break
 				}
 
@@ -123,7 +144,11 @@ func main() {
 				}
 			}
 		}
-		s.played++
+		if !s.skipped {
+			s.played++
+		} else {
+			s.skipped = false
+		}
 	}
 	amaze.ClearScreen()
 }

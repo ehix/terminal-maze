@@ -9,10 +9,6 @@ type Difficulty struct {
 	sections     [][]int
 }
 
-func (d *Difficulty) GetCurrentStage() []int {
-	return d.currentStage
-}
-
 func (d *Difficulty) setSections() {
 	s := getOddSeries(d.min, d.max)
 	sectionSize := len(s) / d.stages
@@ -36,19 +32,6 @@ func (d *Difficulty) SetCurrentStage(played int) {
 	}
 }
 
-// func (d *Difficulty) SetCurrentStage(played int) {
-// 	if 0 < played && played < (d.stages*d.perStage) {
-// 		if played%d.perStage == 0 {
-// 			d.currentStage++
-// 			d.currentStage = sections[d.currentStage]
-// 		}
-// 	}
-// 	if d.currentStage < d.stages {
-// 		d.currentStage
-// 	}
-// 	fmt.Println(d.currentStage)
-// }
-
 func (d *Difficulty) GetDimensions() (int, int) {
 	var dims []int
 	for i := 0; i < 2; i++ {
@@ -58,11 +41,14 @@ func (d *Difficulty) GetDimensions() (int, int) {
 }
 
 func NewDifficulty() Difficulty {
-	var d Difficulty
-	d.min = 7
-	d.max = 41
-	d.stages = 6
-	d.perStage = 3
+	// n = 34 = (17 * 2) = len(0-17) i.e. (2*((3*6)-1) - (41-7)) = 0
+	// or (2*((2*9)-1), etc..
+	d := Difficulty{
+		min:      7,
+		max:      41,
+		stages:   9, //6
+		perStage: 2, //3
+	}
 	d.setSections()
 	return d
 }
