@@ -5,12 +5,13 @@ import (
 	"time"
 )
 
-// Node represents a node in the A* algorithm
+// Node represents a node in the A* algorithm.
 type Node struct {
 	row, col int
 	parent   *Node
 }
 
+// Unused, as the start and end are supplied by the maze itself.
 func (m *Maze) findStartEndNode() (*Node, *Node) {
 	var startNode *Node
 	var exitNode *Node
@@ -26,7 +27,7 @@ func (m *Maze) findStartEndNode() (*Node, *Node) {
 	return startNode, exitNode
 }
 
-// AutoSolve finds a path to the exit using the A* algorithm
+// AutoSolve finds a path to the maze exit using the A* algorithm.
 func (m *Maze) AutoSolve() {
 	var startNode *Node
 	var exitNode *Node
@@ -69,6 +70,7 @@ func (m *Maze) AutoSolve() {
 				current = current.parent
 				path = append([]*Node{current}, path...)
 			}
+			// Set up spinning animation
 			var spin int
 			spinner := spinners["clock"]
 			// Move the player along the path
@@ -84,14 +86,17 @@ func (m *Maze) AutoSolve() {
 					m.MovePlayer('a')
 				}
 				current = next
+
+				// Print the maze and ensure the spinner doesn't go OOB
 				m.Print()
 				if spin == len(spinner.frames)-1 {
 					spin = 0
 				}
 				fmt.Println(Name, spinner.frames[spin])
 				spin++
-				fmt.Print("\033[H")
-				time.Sleep(time.Duration(spinner.interval) * time.Millisecond) // Adjust the speed of auto-solve
+				CursorTopLeft()
+				// Speed adjust for auto-solve
+				time.Sleep(time.Duration(spinner.interval) * time.Millisecond)
 			}
 			break
 		}
@@ -125,20 +130,20 @@ func (m *Maze) AutoSolve() {
 	}
 }
 
-// g calculates the cost from the start node to a node
+// Calculates the cost from the start node to a node.
 func (m *Maze) g(n *Node) int {
 	// In this simple version, we assume that each step has a cost of 1
 	// You can customize this function to consider different costs for each step
 	return 1
 }
 
-// h estimates the cost from a node to the goal (heuristic)
+// Estimates the cost from a node to the goal (heuristic).
 func (m *Maze) h(n *Node, goal *Node) int {
 	// Use Manhattan distance as a heuristic (distance between two points)
 	return abs(n.row-goal.row) + abs(n.col-goal.col)
 }
 
-// abs returns the absolute value of an integer
+// Returns the absolute value of an integer.
 func abs(x int) int {
 	if x < 0 {
 		return -x

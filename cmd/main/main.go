@@ -11,6 +11,7 @@ import (
 	"github.com/eiannone/keyboard"
 )
 
+// Session implements some minor controls and metrics.
 type session struct {
 	// Number of consecutive games played
 	played int
@@ -18,37 +19,13 @@ type session struct {
 	cheated int
 }
 
-// Display a simple text animation
-func animateText(text string, interval time.Duration, pause time.Duration) {
-	textLines := strings.Split(text, "\n")
-	numLines := len(textLines)
-	originX := 0
-	originY := 0
-	for i := 0; i < numLines; i++ {
-		amaze.ClearScreen()
-		for j := 0; j <= i; j++ {
-			cursorTopLeft()
-			for k := 0; k < originY; k++ {
-				fmt.Println() // Add padding lines
-			}
-			for k, line := range textLines {
-				if k <= i {
-					fmt.Printf("%s\n", strings.Repeat(" ", originX)+line)
-				}
-			}
-			time.Sleep(interval)
-		}
-	}
-	time.Sleep(pause)
-}
-
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 	printBanner()
 	printControls()
-	// Session implements some minor controls and metrics
+
+	// Initalise the session and difficulty managers
 	s := session{played: 0, cheated: 0}
-	// Difficulty managages the maze size and the play count increases
 	d := amaze.NewDifficulty()
 
 gameplay:
@@ -129,6 +106,30 @@ gameplay:
 	amaze.ClearScreen()
 }
 
+// Display a simple text animation.
+func animateText(text string, interval time.Duration, pause time.Duration) {
+	textLines := strings.Split(text, "\n")
+	numLines := len(textLines)
+	originX := 0
+	originY := 0
+	for i := 0; i < numLines; i++ {
+		amaze.ClearScreen()
+		for j := 0; j <= i; j++ {
+			amaze.CursorTopLeft()
+			for k := 0; k < originY; k++ {
+				fmt.Println() // Add padding lines
+			}
+			for k, line := range textLines {
+				if k <= i {
+					fmt.Printf("%s\n", strings.Repeat(" ", originX)+line)
+				}
+			}
+			time.Sleep(interval)
+		}
+	}
+	time.Sleep(pause)
+}
+
 func printBanner() {
 	interval := time.Duration(25) * time.Millisecond
 	pause := time.Duration(50) * time.Millisecond
@@ -155,11 +156,7 @@ func printMetrics(name string, played int, cheated int, cheater bool, width int,
 	fmt.Printf("%-*s%-dx%d\n", sformat, "├─size:", width, height)
 	fmt.Printf("%-*s%-2d\n", sformat, "├─solved:", played)
 	fmt.Printf("%-*s%-2d", sformat, "├─cheated:", cheated)
-	cursorTopLeft()
-}
-
-func cursorTopLeft() {
-	fmt.Print("\033[H")
+	amaze.CursorTopLeft()
 }
 
 var bannerFill = `
