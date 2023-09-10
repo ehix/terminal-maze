@@ -14,8 +14,8 @@ terminal maze is a simple and fun text-based maze game that you can play in your
 ## How to Play
 
 1. Clone this repository to your local machine.
-2. Open your terminal and navigate to the project directory.
-3. Run the game using `go run`
+2. Open your terminal and navigate to the `cmd` directory.
+3. Run the binary `./terminalmaze`.
 4. Use the W, A, S, and D keys to move your character.
 5. Reach the exit to win the game.
 6. Challenge yourself with different mazes.
