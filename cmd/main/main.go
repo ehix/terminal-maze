@@ -21,8 +21,8 @@ type session struct {
 
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
-	printBanner()
-	printControls()
+	// printBanner()
+	// printControls()
 
 	// Initalise the session and difficulty managers
 	s := session{played: 0, cheated: 0}
@@ -68,21 +68,16 @@ gameplay:
 				maze.AutoSolve()
 			// Remove random wall tiles with some probability
 			case keyboard.KeyCtrlQ:
-				s.cheated += maze.MakeEasy()
-				cheater = true
+				confirmCheat(maze.MakeEasy(), &s, &cheater)
 			// Remove a wall in a given direction
 			case keyboard.KeyCtrlW:
-				s.cheated += maze.MakePath('w')
-				cheater = true
+				confirmCheat(maze.MakePath('w'), &s, &cheater)
 			case keyboard.KeyCtrlA:
-				s.cheated += maze.MakePath('a')
-				cheater = true
+				confirmCheat(maze.MakePath('a'), &s, &cheater)
 			case keyboard.KeyCtrlS:
-				s.cheated += maze.MakePath('s')
-				cheater = true
+				confirmCheat(maze.MakePath('s'), &s, &cheater)
 			case keyboard.KeyCtrlD:
-				s.cheated += maze.MakePath('d')
-				cheater = true
+				confirmCheat(maze.MakePath('d'), &s, &cheater)
 			// Regenerate a new maze
 			case keyboard.KeyCtrlR:
 				continue gameplay
@@ -104,6 +99,14 @@ gameplay:
 		}
 	}
 	amaze.ClearScreen()
+}
+
+// Only modifies session on successful cheat attempts.
+func confirmCheat(i int, s *session, cheater *bool) {
+	if i != 0 {
+		s.cheated += i
+		*cheater = true
+	}
 }
 
 // Display a simple text animation.
