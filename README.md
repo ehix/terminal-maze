@@ -2,6 +2,8 @@
 
 terminal maze is a simple and fun text-based maze game that you can play in your terminal. Navigate through randomly generated mazes, find the exit, and enjoy the challenge of maze-solving. Whether you prefer to solve mazes manually or watch an AI solve them, terminal maze offers an engaging experience right from your command line!
 
+[![Run on Repl.it](https://replit.com/badge/github/ehix/terminal-maze)](https://replit.com/@3h1x0/terminal-maze)
+
 ## Features
 
 - Play maze games in your terminal.
