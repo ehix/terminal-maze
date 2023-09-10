@@ -21,8 +21,8 @@ type session struct {
 
 func main() {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
-	// printBanner()
-	// printControls()
+	printBanner()
+	printControls()
 
 	// Initalise the session and difficulty managers
 	s := session{played: 0, cheated: 0}
