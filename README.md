@@ -25,7 +25,7 @@ terminal maze is a simple and fun text-based maze game that you can play in your
 | :------------ | :------------------- |
 | Move          |  `WASD`              |
 | Skip level    |  `Ctrl r`            |
-| Autosolve     |  `Ctrl e`            |
+| Auto-solve    |  `Ctrl e`            |
 | Make easier   |  `Ctrl q`            |
 | Remove a wall |  `Ctrl WASD`         |
 | Exit          |  `Ctrl c` or `Esc`   |
