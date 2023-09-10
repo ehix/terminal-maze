@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ehix/terminalmaze/amaze"
+	"github.com/ehix/terminalmaze/pkg/amaze"
 	"github.com/eiannone/keyboard"
 )
 

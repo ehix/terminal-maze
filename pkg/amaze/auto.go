@@ -88,9 +88,9 @@ func (m *Maze) AutoSolve() {
 				if spin == len(spinner.frames)-1 {
 					spin = 0
 				}
-				fmt.Println(spinner.frames[spin])
+				fmt.Println(Name, spinner.frames[spin])
 				spin++
-
+				fmt.Print("\033[H")
 				time.Sleep(time.Duration(spinner.interval) * time.Millisecond) // Adjust the speed of auto-solve
 			}
 			break
