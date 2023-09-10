@@ -119,28 +119,35 @@ func getRandom(s []int) int {
 	return s[rand.Intn(len(s))]
 }
 
-func (m *Maze) addEmptyInDirection(d struct{ row, col int }) {
+func (m *Maze) addEmptyInDirection(d struct{ row, col int }) bool {
+	complete := false
 	nextRow, nextCol := m.row+d.row, m.col+d.col
 	if nextRow > 0 && nextRow < (m.maxRows-1) && nextCol > 0 && nextCol < (m.maxCols-1) && m.grid[nextRow][nextCol] == tiles.wall {
 		m.grid[nextRow][nextCol] = tiles.empty
+		complete = true
 	}
+	return complete
 }
 
-func (m *Maze) addRandomEmpty(rate float64) {
+func (m *Maze) addRandomEmpty(rate float64) int {
+	var removed int
 	for i, row := range m.grid {
 		if i != 0 && i != m.maxRows-1 {
 			for j, tile := range row {
 				if j != 0 && j != m.maxCols-1 {
 					if tile == tiles.wall && rand.Float64() < rate {
 						m.grid[i][j] = tiles.empty
+						removed++
 					}
 				}
 			}
 		}
 	}
+	return removed
 }
 
-func (m *Maze) MakePath(key rune) {
+func (m *Maze) MakePath(key rune) int {
+	var removed int
 	var d struct{ row, col int }
 	switch key {
 	case 'w':
@@ -152,11 +159,14 @@ func (m *Maze) MakePath(key rune) {
 	case 'd':
 		d.col = 1
 	}
-	m.addEmptyInDirection(d)
+	if m.addEmptyInDirection(d) {
+		removed++
+	}
+	return removed
 }
 
-func (m *Maze) MakeEasy() {
-	m.addRandomEmpty(0.5)
+func (m *Maze) MakeEasy() int {
+	return m.addRandomEmpty(0.5)
 }
 
 // MovePlayer moves the player in the specified direction
